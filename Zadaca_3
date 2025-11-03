@@ -1,0 +1,79 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int val;
+    Node* next;
+};
+
+void addNode(Node*& head, int value) {
+    Node* n = new Node{value, nullptr};
+    if (!head) head = n;
+    else {
+        Node* p = head;
+        while (p->next) p = p->next;
+        p->next = n;
+    }
+}
+
+void print(Node* head) {
+    for (Node* p = head; p; p = p->next)
+        cout << p->val << " ";
+    cout << endl;
+}
+
+void bubbleSort(Node* head) {
+    if (!head) return;
+    bool swapped = true;
+    while (swapped) {
+        swapped = false;
+        Node* p = head;
+        while (p->next) {
+            if (p->val > p->next->val) {
+                swap(p->val, p->next->val);
+                swapped = true;
+            }
+            p = p->next;
+        }
+    }
+}
+
+void insertionSort(Node*& head) {
+    Node* sorted = nullptr;
+    Node* current = head;
+
+    while (current) {
+        Node* next = current->next;
+        if (!sorted || current->val < sorted->val) {
+            current->next = sorted;
+            sorted = current;
+        } else {
+            Node* p = sorted;
+            while (p->next && p->next->val < current->val)
+                p = p->next;
+            current->next = p->next;
+            p->next = current;
+        }
+        current = next;
+    }
+    head = sorted;
+}
+
+int main() {
+    Node* head = nullptr;
+    int x;
+
+    while (cin >> x && x != -1)
+        addNode(head, x);
+
+    print(head);
+    
+
+    int izbor; cin >> izbor;
+    if (izbor == 1) bubbleSort(head);
+    else if (izbor == 2) insertionSort(head);
+
+    print(head);
+
+    return 0;
+}
