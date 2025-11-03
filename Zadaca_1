@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int value;
+    Node* next;
+};
+
+void insertSorted(Node*& head, int newValue) {
+    Node* newNode = new Node;
+    newNode->value = newValue;
+    newNode->next = nullptr;
+
+    if (head == nullptr || newValue < head->value) {
+        newNode->next = head;
+        head = newNode;
+        return;
+    }
+
+    Node* current = head;
+    while (current->next != nullptr && current->next->value < newValue) {
+        current = current->next;
+    }
+
+    newNode->next = current->next;
+    current->next = newNode;
+}
+
+void print(Node* head) {
+    while (head != nullptr) {
+        cout << head->value << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    Node* head = nullptr;
+    int broj;
+    while (true) {
+        cin >> broj;
+        if (broj == -1) break;
+        insertSorted(head, broj);
+    }
+    print(head);
+    return 0;
+}
