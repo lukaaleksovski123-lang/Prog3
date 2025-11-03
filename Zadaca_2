@@ -1,0 +1,76 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int value;
+    Node* next;
+};
+
+void insertSorted(Node*& head, int newValue) {
+    Node* newNode = new Node;
+    newNode->value = newValue;
+    newNode->next = nullptr;
+
+    if (head == nullptr || newValue < head->value) {
+        newNode->next = head;
+        head = newNode;
+        return;
+    }
+
+    Node* current = head;
+    while (current->next != nullptr && current->next->value < newValue) {
+        current = current->next;
+    }
+
+    if (current->value == newValue || (current->next != nullptr && current->next->value == newValue)) {
+        delete newNode;
+        return;
+    }
+
+    newNode->next = current->next;
+    current->next = newNode;
+}
+
+void printList(Node* head) {
+    while (head != nullptr) {
+        cout << head->value << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+void mergeLists(Node* list1, Node* list2, Node*& result) {
+    while (list1 != nullptr) {
+        insertSorted(result, list1->value);
+        list1 = list1->next;
+    }
+    while (list2 != nullptr) {
+        insertSorted(result, list2->value);
+        list2 = list2->next;
+    }
+}
+
+int main() {
+    Node* list1 = nullptr;
+    Node* list2 = nullptr;
+    Node* result = nullptr;
+    int broj;
+
+    while (true) {
+        cin >> broj;
+        if (broj == -1) break;
+        insertSorted(list1, broj);
+    }
+
+    while (true) {
+        cin >> broj;
+        if (broj == -1) break;
+        insertSorted(list2, broj);
+    }
+
+    mergeLists(list1, list2, result);
+
+    printList(result);
+
+    return 0;
+}
