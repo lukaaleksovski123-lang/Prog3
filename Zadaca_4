@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int val;
+    Node* next;
+    Node* prev;
+};
+
+struct DList {
+    Node* head = nullptr;
+    Node* tail = nullptr;
+};
+
+void addNode(DList& l, int value) {
+    Node* n = new Node{value, nullptr, l.tail};
+    if (!l.head) l.head = l.tail = n;
+    else { l.tail->next = n; l.tail = n; }
+}
+
+void removeNode(DList& l, int value, bool remove_all) {
+    Node* cur = l.head;
+    while (cur) {
+        if (cur->val == value) {
+            Node* tmp = cur;
+            if (cur->prev) cur->prev->next = cur->next;
+            else l.head = cur->next;
+
+            if (cur->next) cur->next->prev = cur->prev;
+            else l.tail = cur->prev;
+
+            cur = cur->next;
+            delete tmp;
+
+            if (!remove_all) return;
+        } else cur = cur->next;
+    }
+}
+
+Node* searchNode(DList& l, int value) {
+    Node* cur = l.head;
+    while (cur) {
+        if (cur->val == value) return cur;
+        cur = cur->next;
+    }
+    return nullptr;
+}
+
+void printList(DList& l) {
+    Node* cur = l.head;
+    while (cur) {
+        cout << cur->val << " ";
+        cur = cur->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    DList l;
+    int x;
+
+    while (cin >> x && x != -1) addNode(l, x);
+
+    printList(l);
+
+    cin >> x;
+    removeNode(l, x, false);
+    printList(l);
+
+    cin >> x;
+    removeNode(l, x, true);
+    printList(l);
+
+    cin >> x;
+    Node* s = searchNode(l, x);
+    if (s) cout << "Elementot " << s->val << " e vo listata" << endl;
+    else cout << "ne postoi" << endl;
+}
